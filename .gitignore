@@ -1,0 +1,77 @@
+# =============================
+# Java / Spring Boot
+# =============================
+*.class
+*.jar
+*.war
+*.ear
+
+# =============================
+# Maven / Gradle
+# =============================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# =============================
+# IntelliJ IDEA
+# =============================
+.idea/
+*.iml
+*.iws
+out/
+*.ipr
+
+# =============================
+# Eclipse
+# =============================
+*.classpath
+*.project
+*.settings/
+
+# =============================
+# VS Code
+# =============================
+.vscode/
+
+# =============================
+# Logs
+# =============================
+*.log
+logs/
+log/
+
+# =============================
+# OS files
+# =============================
+.DS_Store
+Thumbs.db
+
+# =============================
+# Spring Boot / Environment
+# =============================
+# Ignore environment-specific config files
+application-*.yml
+application-*.properties
+.env
+.env.local
+.env.*.local
+
+# =============================
+# Others
+# =============================
+# If using Lombok or generated sources
+generated/
+kafka-data/
