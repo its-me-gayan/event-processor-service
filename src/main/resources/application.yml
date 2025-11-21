@@ -1,12 +1,14 @@
 server:
-  port: 8181
+  port: 8080
 spring:
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
   application:
     name: event-processor-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/event-db
-    username: admin
-    password: admin
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/event-db}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -17,13 +19,13 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: update   # for dev; use validate or none in prod
+      ddl-auto: none   # for dev; use validate or none in prod
     show-sql: false
     properties:
       hibernate:
         format_sql: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: event-processor-test
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

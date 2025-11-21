@@ -1,25 +1,64 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:14
+    container_name: eps_postgres
+    environment:
+      POSTGRES_USER: eps_user
+      POSTGRES_PASSWORD: eps_pass
+      POSTGRES_DB: eventdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eps_user -d eventdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   kafka:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9581:9581"
+    container_name: eps_kafka
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9581
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9581"
-      KAFKA_NUM_PARTITIONS: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
-      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    ports:
+      - "9092:9092"
     volumes:
-      - ./kafka-data:/var/lib/kafka/data
+      - kafka-data:/var/lib/kafka/data
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: event-processor-service:local
+    container_name: eps_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/eventdb
+      SPRING_DATASOURCE_USERNAME: eps_user
+      SPRING_DATASOURCE_PASSWORD: eps_pass
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
+volumes:
+  pgdata:
+  kafka-data:
