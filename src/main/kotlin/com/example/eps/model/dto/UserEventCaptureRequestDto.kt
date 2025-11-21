@@ -1,5 +1,6 @@
 package com.example.eps.model.dto
 
+import com.example.eps.constants.ErrorMessages
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
@@ -18,7 +19,7 @@ data class UserEventCaptureRequestDto(
     val userId: String,
 
     @field:NotBlank
-    @field:Pattern(regexp = "^[A-Z]{2}\$", message = "ISO2 country code uppercase")
+    @field:Pattern(regexp = "^[A-Z]{2}\$", message = ErrorMessages.INVALID_COUNTRY_CODE)
     val countryCode: String,
 
     val timestamp: Instant = Instant.now()

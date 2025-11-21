@@ -2,6 +2,7 @@ package com.example.eps.service
 
 import com.example.eps.constants.InboxStatus
 import com.example.eps.constants.OutboxStatus
+import com.example.eps.model.entity.OutboxEvent
 import java.util.UUID
 
 
@@ -13,5 +14,6 @@ import java.util.UUID
  */
 interface InboxOutboxEventUpdateHelperService {
     fun updateInboxEvent(id: UUID, status: InboxStatus, isPublished: Boolean, error: String?)
-    fun updateOutboxEvent(id: UUID, status: OutboxStatus, payload: String?)
+    fun updateOutboxEvent(id: UUID, status: OutboxStatus, payload: String?,error :String?)
+    fun saveOutboxEvent(outboxEvent: OutboxEvent): OutboxEvent
 }

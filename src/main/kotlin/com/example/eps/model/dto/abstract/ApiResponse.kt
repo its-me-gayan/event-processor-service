@@ -1,5 +1,6 @@
 package com.example.eps.model.dto.abstract
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.sql.Timestamp
 import java.time.Instant
 
@@ -10,6 +11,7 @@ import java.time.Instant
  * Date: 11/18/25
  * Time: 11:47 PM
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ApiResponse<T>(
     val success: Boolean,
     val message: String,

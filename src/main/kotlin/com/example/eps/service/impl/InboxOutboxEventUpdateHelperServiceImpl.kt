@@ -3,11 +3,13 @@ package com.example.eps.service.impl
 import com.example.eps.constants.InboxStatus
 import com.example.eps.constants.OutboxStatus
 import com.example.eps.exception.ApplicationException
+import com.example.eps.model.entity.OutboxEvent
 import com.example.eps.respository.InboxRepository
 import com.example.eps.respository.OutboxRepository
 import com.example.eps.service.InboxOutboxEventUpdateHelperService
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.UUID
 
@@ -19,12 +21,12 @@ import java.util.UUID
  * Time: 10:56 PM
  */
 @Service
-class InboxOutboxOutboxEventUpdateHelperServiceImpl(
+class InboxOutboxEventUpdateHelperServiceImpl(
     private val inboxRepository: InboxRepository,
     private val outboxRepository: OutboxRepository
 ): InboxOutboxEventUpdateHelperService {
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun updateInboxEvent(id: UUID, status: InboxStatus, isPublished: Boolean, error: String?) {
         val inboxEvent = inboxRepository.findById(id).orElseThrow();
         inboxEvent.updatedAt = Instant.now()
@@ -42,17 +44,19 @@ class InboxOutboxOutboxEventUpdateHelperServiceImpl(
 
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun updateOutboxEvent(
         id: UUID,
         status: OutboxStatus,
-        payload: String?
+        payload: String?,
+        error: String?,
     ) {
-        val outboxEvent = outboxRepository.findById(id).orElseThrow()
+        val outboxEvent = outboxRepository.findByOriginalEventId(id).orElseThrow()
         outboxEvent.updatedAt = Instant.now()
         if (payload != null) {
             outboxEvent.payload =payload
         }
+        outboxEvent.error =error
         outboxEvent.status = status
         try {
             outboxRepository.save(outboxEvent)
@@ -60,6 +64,13 @@ class InboxOutboxOutboxEventUpdateHelperServiceImpl(
             throw ApplicationException(ex.message,ex.cause)
         }
 
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    override fun saveOutboxEvent(outboxEvent: OutboxEvent): OutboxEvent {
+        val save = outboxRepository.save(outboxEvent)
+        outboxRepository.flush()
+        return save;
     }
 
 }

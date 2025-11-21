@@ -23,7 +23,7 @@ class KafkaTopicConfig {
 
     @Bean
     fun incomingTopic(): NewTopic {
-        return NewTopic(incomingTopicName, 1, 1) // partitions=3, replication=1
+        return NewTopic(incomingTopicName, 1, 1)
     }
 
     @Bean

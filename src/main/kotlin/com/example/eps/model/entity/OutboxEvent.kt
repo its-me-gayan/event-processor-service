@@ -1,6 +1,5 @@
 package com.example.eps.model.entity
 
-import com.example.eps.constants.InboxStatus
 import com.example.eps.constants.OutboxStatus
 import jakarta.persistence.*
 import java.time.Instant
@@ -24,7 +23,7 @@ data class OutboxEvent(
     @Column(name = "original_event_id", nullable = false)
     val originalEventId: UUID,
 
-    @Column(name = "payload", nullable = false, columnDefinition = "jsonb")
+    @Column(name = "payload", nullable = false, columnDefinition = "text")
     var payload: String,
 
     @Column(name = "created_at", nullable = false)

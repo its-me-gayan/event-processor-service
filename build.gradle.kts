@@ -46,6 +46,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
+    implementation("com.vladmihalcea:hibernate-types-60:2.21.1") // For Hibernate 6.x
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+
 }
 
 dependencyManagement {

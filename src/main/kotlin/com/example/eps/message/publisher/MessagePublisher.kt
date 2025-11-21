@@ -1,4 +1,4 @@
-package com.example.eps.publish
+package com.example.eps.message.publisher
 
 
 /**

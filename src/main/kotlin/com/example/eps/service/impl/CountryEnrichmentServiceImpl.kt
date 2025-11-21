@@ -29,7 +29,8 @@ class CountryEnrichmentServiceImpl(
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
 
-    @Retryable(maxAttempts = 3, backoff = Backoff(delay = 2000))
+    @Retryable(maxAttemptsExpression = "\${external.countries.retry:3}",
+        backoff = Backoff(delayExpression = "\${external.countries.back-off-delay:2000}"))
     override fun fetchCountryInfo(alpha2: String): CountryInfoDto {
         val formattedUrl = url.replace("{code}", alpha2)
         println("Calling external API: {} "+formattedUrl)

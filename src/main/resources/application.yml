@@ -16,15 +16,16 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update   # for dev; use validate or none in prod
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: event-processor-group
+      group-id: event-processor-test
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest       # important to consume old messages
@@ -32,8 +33,6 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    topic:
-      kafka-topic: "events-raw"
 
 
 external:
@@ -42,12 +41,9 @@ external:
     time-out: 5
     retry: 3
     back-off-delay: 2000
-#
+
 kafka:
   bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   topic:
-    incoming: events-raw
-    enriched: events-enriched
-
-#spring:
-
+    incoming: topic-events-raw
+    enriched: topic-events-enriched
