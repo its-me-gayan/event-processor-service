@@ -57,15 +57,15 @@ This project demonstrates strong backend engineering practices including transac
 
 ## 🔧 **Tech Stack**
 
-| Layer            | Technology                     |
-| ---------------- | ------------------------------ |
-| Language         | Kotlin                         |
-| Framework        | Spring Boot, Spring WebFlux    |
-| Messaging        | Apache Kafka                   |
-| Database         | H2 / PostgreSQL (configurable) |
-| Schema Migration | Liquibase                      |
-| Build Tool       | Gradle (Kotlin DSL)            |
-| Testing          | JUnit 5                        |
+| Layer            | Technology                |
+| ---------------- | ------------------------- |
+| Language         | Kotlin                    |
+| Framework        | Spring Boot, Spring WebFlux |
+| Messaging        | Apache Kafka              |
+| Database         | PostgreSQL (configurable) |
+| Schema Migration | Liquibase                 |
+| Build Tool       | Gradle (Kotlin DSL)       |
+| Testing          | JUnit 5                   |
 
 ---
 
@@ -103,7 +103,7 @@ POST /api/v1/events
 
 ### 2️⃣ **Service stores the event in Inbox**
 
-* Status: `PENDING`
+* Status: `RECEIVED`
 
 ### 3️⃣ **Inbox Processor picks it up**
 
@@ -144,16 +144,10 @@ This pattern gives:
 
 ## ▶️ **Running the Application**
 
-### **1. Build the project**
+### **Start the full stack**
 
 ```
-./gradlew clean build
-```
-
-### **2. Run the service**
-
-```
-./gradlew bootRun
+docker compose up --build
 ```
 
 Service will start on:
@@ -164,15 +158,6 @@ http://localhost:8080
 
 ---
 
-## 🧪 **Testing**
-
-Run test suite:
-
-```
-./gradlew test
-```
-
----
 
 ## 📘 **API Documentation**
 
@@ -187,7 +172,6 @@ http://localhost:8080/swagger-ui.html
 ## 🧱 **Improvements (Future Work)**
 
 * Add retries & dead-letter queue for Kafka
-* Pagination for event inquiry
 * Add distributed tracing
 * Add metrics (Micrometer + Prometheus)
 
