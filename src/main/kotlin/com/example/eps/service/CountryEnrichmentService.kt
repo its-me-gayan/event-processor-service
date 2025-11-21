@@ -11,5 +11,5 @@ import com.example.eps.model.dto.CountryInfoDto
  */
 interface CountryEnrichmentService {
 
-    fun fetchCountryInfo(alpha2:String): CountryInfoDto
+    fun fetchCountryInfo(countryCode:String): CountryInfoDto
 }

@@ -37,10 +37,12 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationException(ex: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Nothing>> {
-        val msg = ex.bindingResult.allErrors.joinToString("; ") { it.defaultMessage ?: ErrorMessages.VALIDATION_ERROR }
+        val errorMessages = ex.bindingResult.fieldErrors.joinToString("; ") { fieldError ->
+            "'${fieldError.field}' ${fieldError.defaultMessage ?: ErrorMessages.VALIDATION_ERROR}"
+        }
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponse.failure(msg))
+            .body(ApiResponse.failure("Validation error $errorMessages"))
     }
 
     @ExceptionHandler(JsonParseException::class, JsonMappingException::class)
